@@ -3,31 +3,39 @@ import { motion, useAnimation } from 'framer-motion'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import TargetModal from './Modals';
 
-const allTargets = [
-  { id: 1, date: 'OCT 1', image: 'img/test1.png', score: 'Not played', isPlus: true },
-  { id: 2, date: 'OCT 2', image: 'img/test2.png', score: 'Not played', isPlus: true },
-  { id: 3, date: 'OCT 3', image: 'img/test3.png', score: 'played', isPlus: true },
-  { id: 4, date: 'OCT 4', image: 'img/test4.png', score: 'Not played', isPlus: true },
-  { id: 5, date: 'OCT 5', image: 'img/test5.png', score: 'Not played', isPlus: true },
-  { id: 6, date: 'OCT 6', image: 'img/test6.png', score: 'Not played', isPlus: true },
-  { id: 7, date: 'OCT 7', image: 'img/test7.png', score: 'Not played', isPlus: true },
-  { id: 8, date: 'OCT 8', image: 'img/test8.png', score: 'Not played', isPlus: true },
-  { id: 9, date: 'OCT 9', image: 'img/test9.png', score: 'Not played', isPlus: true },
-  { id: 10, date: 'OCT 10', image: 'img/test10.png', score: 'Not played', isPlus: true },
-  { id: 11, date: 'OCT 11', image: 'img/test11.png', score: 'Not played', isPlus: true },
-  { id: 12, date: 'OCT 12', image: 'img/test12.png', score: 'Not played', isPlus: true },
-  { id: 13, date: 'OCT 13', image: 'img/test13.png', score: 'Not played', isPlus: true },
-  { id: 14, date: 'OCT 14', image: 'img/test14.png', score: 'Not played', isPlus: true },
+interface Target {
+  id: number;
+  image: string;
+  colors: string;
+  date?: string;
+  isPlus?: boolean;
+}
+
+const allTargets: Target[] = [
+  { id: 1,  image: 'img/test1.png', colors: '[#3F4869][#F4DA64][#E25C57]'},
+  { id: 2,  image: 'img/test2.png', colors: '[#6B7CBE][#ABC497][#FFFEFE]'},
+  { id: 3, image: 'img/test3.png', colors: '[#FADE8B][#594C94]' },
+  { id: 4,  image: 'img/test4.png', colors: '[#E6E9E3][#61A74E][#33572B]'},
+  { id: 5,  image: 'img/test5.png', colors: '[#3F4869][#61A74E][#242A42]'},
+  { id: 6, image: 'img/test6.png', colors: '[#434B92][#EAC049]'},
+  { id: 7,  image: 'img/test7.png', colors: '[#6592CF][#243D83]'},
+  { id: 8, image: 'img/test8.png', colors: '[#8AB8B6][#D96C7B][#F3EAD2]'},
+  { id: 9,  image: 'img/test9.png', colors: '[#b5e0ba][#5d3a3a]'},
+  { id: 10, image: 'img/test10.png', colors: '[#62306D][#AA445F][#E38F66]'},
+  { id: 11, image: 'img/test11.png', colors: '[#6592CF][#243D83][#EEB850]'},
+  { id: 12,  image: 'img/test12.png', colors: '[#3F4869][#61A74E]'},
+  { id: 13,  image: 'img/test13.png', colors: '[#61A74E][#F7F3D7]'},
+  { id: 14,  image: 'img/test14.png', colors: '[#434B92][#434B92]'},
 ]
 
-const filters = ['All', 'Not played', 'Played']
+const filters = ['All', 'Regular', 'Plus']
 
-const Targets = () => {
+const Targets: React.FC = () => {
   const [currentMonth] = useState('October 2024')
   const [filter, setFilter] = useState('All')
   const [searchTerm] = useState('')
   const controls = useAnimation()
-  const [selectedTarget, setSelectedTarget] = useState(null)
+  const [selectedTarget, setSelectedTarget] = useState<Target | null>(null)
 
   useEffect(() => {
     controls.start({ opacity: 1, y: 0 })
@@ -35,12 +43,12 @@ const Targets = () => {
 
   const filteredTargets = allTargets.filter(target => 
     (filter === 'All' || 
-    (filter === 'Played' && target.score !== 'Not played') ||
-    (filter === 'Not played' && target.score === 'Not played')) &&
-    target.date.toLowerCase().includes(searchTerm.toLowerCase())
+    (filter === 'Regular' && !target.isPlus) ||
+    (filter === 'Plus' && target.isPlus)) &&
+    (target.date?.toLowerCase().includes(searchTerm.toLowerCase()) ?? true)
   )
 
-  const handleTargetClick = (target) => {
+  const handleTargetClick = (target: Target) => {
     setSelectedTarget(target)
   }
 
@@ -132,12 +140,12 @@ const Targets = () => {
               <div className="w-full h-24 mb-2 overflow-hidden bg-gray-700 rounded-md">
                 <img 
                   src={target.image} 
-                  alt={`Target for ${target.date}`} 
+                  alt={`Target ${target.id}`} 
                   className="object-cover w-full h-full"
                 />
               </div>
-              <div className="text-sm text-gray-400">{target.date}</div>
-              <div className="text-sm">{target.score}</div>
+              {target.date && <div className="text-sm text-gray-400">{target.date}</div>}
+              <div className="text-sm">{target.colors}</div>
               {target.isPlus && (
                 <span className="px-1 mt-1 text-xs text-black bg-yellow-500 rounded">PLUS</span>
               )}

@@ -2,7 +2,6 @@ import {
   IconHome,
   IconMilitaryAward,
   IconSchool,
-  IconSwords,
   IconTarget,
   IconChevronRight,
   IconChevronLeft,
@@ -16,8 +15,8 @@ import { useNavigate } from "react-router-dom";
 const navigationItems = [
   { id: "nav-home", name: "Home", icon: <IconHome size={24} />, path: "/" },
   { id: "nav-target", name: "Targets", icon: <IconTarget size={24} />, path: "/targets" },
-  { id: "nav-battles", name: "Battles", icon: <IconSwords size={24} />, path: "/battles" },
-  { id: "nav-leaderboard", name: "Leaderboard", icon: <IconMilitaryAward size={24} />, path: "/leaderboard" },
+  // { id: "nav-battles", name: "Battles", icon: <IconSwords size={24} />, path: "/battles" },
+  { id: "nav-leaderboard", name: "Leaderboard", icon: <IconMilitaryAward size={24} />, path: "/board" },
   { id: "nav-learn", name: "Learn CSS", icon: <IconSchool size={24} />, path: "/learn" },
   { id: "nav-profile", name: "Profile", icon: <IconUser size={24} />, path: "/profile" }
 ];

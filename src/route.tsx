@@ -5,6 +5,7 @@ import RegisterPage from "./pages/register";
 import PlayGround from "./pages/play";
 import Profile from './pages/profile';
 import Targets from "./pages/Targets";
+import Board from "./pages/Board";
 
 const router = createBrowserRouter([
   { 
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/targets",
     element: <Targets />
+  },
+  {
+    path: "/board",
+    element: <Board />
   }
 ]);
 
