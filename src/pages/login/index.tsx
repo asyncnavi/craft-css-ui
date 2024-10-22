@@ -1,6 +1,10 @@
 import { nopeResolver } from "@hookform/resolvers/nope";
 import * as Nope from "nope-validator";
 import { useForm } from "react-hook-form";
+import { TextField } from "../../ui/input";
+import { useAppDispatch } from "../../store";
+import { loginUserWithEmailAndPassword } from "../../slice/auth";
+import withoutAuth from "../../hoc/without-auth.tsx";
 
 type LoginInput = {
   email: string;
@@ -8,10 +12,13 @@ type LoginInput = {
 };
 
 const validation = Nope.object().shape({
-  email: Nope.string().email("Invalid Email Address").required(),
+  email: Nope.string()
+    .email("Invalid Email Address")
+    .required("Email is required"),
   password: Nope.string()
     .min(6, "Password has to be minimum of 6 letters.")
-    .max(255, "Password must be maximum of 255 letters"),
+    .max(255, "Password must be maximum of 255 letters")
+    .required("Password is required"),
 });
 
 const LoginPage = () => {
@@ -19,8 +26,10 @@ const LoginPage = () => {
     resolver: nopeResolver(validation),
   });
 
+  const dispatch = useAppDispatch();
+
   const loginUser = (values: LoginInput) => {
-    console.log(values);
+    dispatch(loginUserWithEmailAndPassword(values));
   };
 
   return (
@@ -34,20 +43,18 @@ const LoginPage = () => {
               <p>Use email and password to login.</p>
             </div>
             <div className="flex flex-col items-start space-y-4 ml-4 w-full">
-              <div className="flex flex-col items-start space-y-2 w-full">
-                <label>Email</label>
-                <input
-                  {...register("email")}
-                  className="p-4 outline-none rounded-2xl text-slate-200 w-full bg-slate-800 border border-white"
-                />
-              </div>
-              <div className="flex flex-col items-start space-y-2 w-full">
-                <label>Password</label>
-                <input
-                  {...register("password")}
-                  className="p-4 outline-none rounded-2xl text-slate-200 w-full bg-slate-800 border border-white"
-                />
-              </div>
+              <TextField
+                error={formState.errors.email && formState.errors.email.message}
+                {...register("email")}
+                label="Email"
+              />
+              <TextField
+                error={
+                  formState.errors.password && formState.errors.password.message
+                }
+                {...register("password")}
+                label="Password"
+              />
               <span className="text-sm underline">Forgot Password ?</span>
               <button
                 type="submit"
@@ -64,4 +71,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default withoutAuth(LoginPage);

@@ -8,7 +8,7 @@ import {
 import clsx from "clsx";
 import { useState } from "react";
 
-const NavigationItems = [
+const navigationItems = [
   {
     id: "nav-home",
     name: "Home",
@@ -43,7 +43,7 @@ const NavigationRail = () => {
     <div className="fixed top-0 left-0 bottom-0 w-[100px] border-r border-r-slate-700 h-screen flex flex-col">
       <img src="/dark_logo.png" className="w-100" />
       <div className="flex flex-col gap-8 my-8">
-        {NavigationItems.map((item) => {
+        {navigationItems.map((item) => {
           return (
             <div
               onClick={() => setActiveNav(item.id)}

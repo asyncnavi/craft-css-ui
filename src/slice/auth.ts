@@ -1,12 +1,8 @@
-import { UserInfo } from "firebase/auth";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {
-  ForgotPasswordParams,
-  RegisterParams,
-  LoginParams,
-} from "../models/auth";
-import { auth } from "../firebase";
-import { parseFirebaseErrFromCodeToText } from "../utils/error";
+import {UserInfo} from "firebase/auth";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {ForgotPasswordParams, LoginParams, RegisterParams,} from "../models/auth";
+import {auth} from "../firebase";
+import {parseFirebaseErrFromCodeToText} from "../utils/error";
 
 type AuthState = {
   status: "idle" | "processing" | "success" | "failed";
@@ -25,8 +21,7 @@ export const sendUserForgotPasswordEmail = createAsyncThunk(
   async (schema: ForgotPasswordParams, { rejectWithValue }) => {
     const { email } = schema;
     try {
-      const response = await auth.sendPasswordResetEmail(email);
-      return response;
+      return await auth.sendPasswordResetEmail(email);
     } catch (error: any) {
       return rejectWithValue(parseFirebaseErrFromCodeToText(error.code));
     }
@@ -37,8 +32,7 @@ export const logOutUser = createAsyncThunk(
   "/logout",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await auth.signOut();
-      return response;
+      return await auth.signOut();
     } catch (error: any) {
       return rejectWithValue(parseFirebaseErrFromCodeToText(error.code));
     }
@@ -77,8 +71,7 @@ export const loginUserWithEmailAndPassword = createAsyncThunk(
     const { email, password } = schema;
     try {
       const response = await auth.signInWithEmailAndPassword(email, password);
-      const user = response.user;
-      return user;
+      return response.user;
     } catch (error: any) {
       return rejectWithValue(parseFirebaseErrFromCodeToText(error.code));
     }
@@ -152,3 +145,6 @@ export const authSlice = createSlice({
     });
   },
 });
+
+
+export const { setUser, clearState } = authSlice.actions;

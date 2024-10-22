@@ -23,7 +23,6 @@ const firebaseErrorCodes: { [key: string]: string } = {
   "auth/user-disabled": "The user account has been disabled.",
   "auth/user-not-found": "The user account does not exist.",
   "auth/wrong-password": "The password is incorrect.",
-  // Add more error codes and their corresponding messages as needed
 };
 /**
  * parseFirebaseErrFromCodeText takes an string of type of firebase error code and return a string

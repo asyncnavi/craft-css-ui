@@ -5,13 +5,13 @@ import "firebase/compat/storage";
 
 //  Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC5k4qzEoQMo974B68AFcPGfyAOb9nttc8",
-  authDomain: "coding-jutsu-30c25.firebaseapp.com",
-  projectId: "coding-jutsu-30c25",
-  storageBucket: "coding-jutsu-30c25.appspot.com",
-  messagingSenderId: "878927153783",
-  appId: "1:878927153783:web:77718b8aa7a06431081472",
-  measurementId: "G-Y0JHVBX0R9",
+  apiKey: "AIzaSyB8hKqAm-LTjhoe7PE2pNdMOPXCJf8oz8E",
+  authDomain: "craftcss-9b162.firebaseapp.com",
+  projectId: "craftcss-9b162",
+  storageBucket: "craftcss-9b162.appspot.com",
+  messagingSenderId: "132929525077",
+  appId: "1:132929525077:web:6a5c15ddba5a2f16768bdc",
+  measurementId: "G-5CLLYCJNQP",
 };
 
 /**
@@ -22,7 +22,7 @@ const app = firebase.initializeApp(firebaseConfig);
 /**
  * Firebase auth
  */
-const auth = firebase.auth();
+const auth = firebase.auth(app);
 
 /**
  * Firebase database

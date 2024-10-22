@@ -1,0 +1,13 @@
+-- React
+
+-- Routing
+
+-- State Management
+
+-- Firebase Base
+
+-- Type System
+
+-- UI
+
+-- API Handling

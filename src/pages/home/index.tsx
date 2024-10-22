@@ -1,6 +1,13 @@
 import NavigationRails from "../../component/navigation-rail";
+import {Link} from "react-router-dom";
+import { useAppDispatch} from "../../store";
+import {logOutUser} from "../../slice/auth.ts";
 
 const Home = () => {
+
+  const dispatch = useAppDispatch()
+
+
   return (
     <div className="bg-slate-950 w-full h-screen text-white">
       <NavigationRails />
@@ -13,10 +20,15 @@ const Home = () => {
               developers! Recreate target images using CSS, and the more concise
               your code, the higher your score. Dive into the fun of coding!{" "}
             </p>
-            <button className="bg-violet-900 px-10 py-6 rounded-full text-xl">
+            <Link to="/login" className="bg-violet-900 px-10 py-6 rounded-full text-xl">
               {" "}
               Get started
-            </button>
+            </Link>
+
+            <Link onClick={() => dispatch(logOutUser())} to="/login" className="bg-red-900 px-10 py-6 rounded-full text-xl">
+              {" "}
+              Logout
+            </Link>
           </div>
           <div>
             <video loop autoPlay className="rounded-3xl">
