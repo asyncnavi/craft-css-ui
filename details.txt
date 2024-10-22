@@ -4,7 +4,8 @@
 
 -- State Management
 
--- Firebase Base
+-- Firebase
+
 
 -- Type System
 
