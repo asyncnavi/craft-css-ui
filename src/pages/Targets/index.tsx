@@ -9,26 +9,27 @@ interface Target {
   colors: string;
   date?: string;
   isPlus?: boolean;
+  played: boolean;
 }
 
 const allTargets: Target[] = [
-  { id: 1,  image: 'img/test1.png', colors: '[#3F4869][#F4DA64][#E25C57]'},
-  { id: 2,  image: 'img/test2.png', colors: '[#6B7CBE][#ABC497][#FFFEFE]'},
-  { id: 3, image: 'img/test3.png', colors: '[#FADE8B][#594C94]' },
-  { id: 4,  image: 'img/test4.png', colors: '[#E6E9E3][#61A74E][#33572B]'},
-  { id: 5,  image: 'img/test5.png', colors: '[#3F4869][#61A74E][#242A42]'},
-  { id: 6, image: 'img/test6.png', colors: '[#434B92][#EAC049]'},
-  { id: 7,  image: 'img/test7.png', colors: '[#6592CF][#243D83]'},
-  { id: 8, image: 'img/test8.png', colors: '[#8AB8B6][#D96C7B][#F3EAD2]'},
-  { id: 9,  image: 'img/test9.png', colors: '[#b5e0ba][#5d3a3a]'},
-  { id: 10, image: 'img/test10.png', colors: '[#62306D][#AA445F][#E38F66]'},
-  { id: 11, image: 'img/test11.png', colors: '[#6592CF][#243D83][#EEB850]'},
-  { id: 12,  image: 'img/test12.png', colors: '[#3F4869][#61A74E]'},
-  { id: 13,  image: 'img/test13.png', colors: '[#61A74E][#F7F3D7]'},
-  { id: 14,  image: 'img/test14.png', colors: '[#434B92][#434B92]'},
+  { id: 1,  image: 'img/test1.png', colors: '', played: false },
+  { id: 2,  image: 'img/test2.png', colors: '', played: false },
+  { id: 3, image: 'img/test3.png', colors: '', played: false },
+  { id: 4,  image: 'img/test4.png', colors: '', played: false },
+  { id: 5,  image: 'img/test5.png', colors: '', played: false },
+  { id: 6, image: 'img/test6.png', colors: '', played: false },
+  { id: 7,  image: 'img/test7.png', colors: '', played: false },
+  { id: 8, image: 'img/test8.png', colors: '', played: false },
+  { id: 9,  image: 'img/test9.png', colors: '', played: false },
+  { id: 10, image: 'img/test10.png', colors: '', played: false },
+  { id: 11, image: 'img/test11.png', colors: '', played: false },
+  { id: 12,  image: 'img/test12.png', colors: '', played: false },
+  { id: 13,  image: 'img/test13.png', colors: '', played: false },
+  { id: 14,  image: 'img/test14.png', colors: '', played: false },
 ]
 
-const filters = ['All', 'Regular', 'Plus']
+const filters = ['All', 'Played', 'Not Played']
 
 const Targets: React.FC = () => {
   const [currentMonth] = useState('October 2024')
@@ -36,6 +37,7 @@ const Targets: React.FC = () => {
   const [searchTerm] = useState('')
   const controls = useAnimation()
   const [selectedTarget, setSelectedTarget] = useState<Target | null>(null)
+  const [playedTargets, setPlayedTargets] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     controls.start({ opacity: 1, y: 0 })
@@ -43,13 +45,26 @@ const Targets: React.FC = () => {
 
   const filteredTargets = allTargets.filter(target => 
     (filter === 'All' || 
-    (filter === 'Regular' && !target.isPlus) ||
-    (filter === 'Plus' && target.isPlus)) &&
+    (filter === 'Played' && playedTargets.has(target.id)) ||
+    (filter === 'Not Played' && !playedTargets.has(target.id))) &&
     (target.date?.toLowerCase().includes(searchTerm.toLowerCase()) ?? true)
   )
 
   const handleTargetClick = (target: Target) => {
     setSelectedTarget(target)
+  }
+
+  const handlePlayNow = (targetId: number, event: React.MouseEvent) => {
+    event.stopPropagation()
+    setPlayedTargets(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(targetId)) {
+        newSet.delete(targetId)
+      } else {
+        newSet.add(targetId)
+      }
+      return newSet
+    })
   }
 
   return (
@@ -149,6 +164,14 @@ const Targets: React.FC = () => {
               {target.isPlus && (
                 <span className="px-1 mt-1 text-xs text-black bg-yellow-500 rounded">PLUS</span>
               )}
+              <button 
+                className={`px-3 py-1 mt-2 text-sm text-white rounded ${
+                  playedTargets.has(target.id) ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'
+                }`}
+                onClick={(e) => handlePlayNow(target.id, e)}
+              >
+                {playedTargets.has(target.id) ? 'Played' : 'Play Now'}
+              </button>
             </motion.div>
           ))}
         </motion.div>
