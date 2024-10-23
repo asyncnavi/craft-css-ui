@@ -82,13 +82,17 @@ const NavigationRail = () => {
           isMobile ? "w-64" : "w-20"
         } z-40`}
       >
-        <motion.img
-          src="/dark_logo.png"
-          alt="Logo"
-          className="w-24 h-24"
-          whileHover={{ scale: 1.1, rotate: 360 }}
-          transition={{ duration: 0.5 }}
-        />
+           <motion.div
+  className="flex items-center justify-center h-40 w-28 md:w-26 md:h-40 lg:w-28 lg:h-32"
+  whileHover={{ scale: 1.05 }}
+  transition={{ type: "spring", stiffness: 260, damping: 20 }}
+>
+  <img  
+    src="/img/logo2.png"
+    alt="Craft CSS Logo"
+    className="object-contain w-full h-full"
+  />
+</motion.div>
        {navigationItems.map((item) => (
   <motion.div
     key={item.id}

@@ -2,10 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const challenges = [
-  { id: 1, title: "Totally Triangle", difficulty: "Easy", participants: 1234, imageUrl: "/challenge1.png" },
-  { id: 2, title: "Carrom", difficulty: "Medium", participants: 987, imageUrl: "/challenge2.png" },
-  { id: 3, title: "Push Button", difficulty: "Hard", participants: 567, imageUrl: "/challenge3.png" },
-  { id: 4, title: "Ups n Downs", difficulty: "Medium", participants: 890, imageUrl: "/challenge4.png" },
+  { id: 1, title: "Totally Triangle", difficulty: "Easy", participants: 1234, imageUrl: "/img/test1.png" },
+  { id: 2, title: "Carrom", difficulty: "Medium", participants: 987, imageUrl: "/img/test3.png" },
+  { id: 3, title: "Push Button", difficulty: "Hard", participants: 567, imageUrl: "/img/test13.png" },
+  { id: 4, title: "Ups n Downs", difficulty: "Medium", participants: 890, imageUrl: "/img/test14.png" },
 ];
 
 const Trending: React.FC = () => {
