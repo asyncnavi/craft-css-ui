@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 const challenges = [
   { id: 1, title: "Totally Triangle", difficulty: "Easy", participants: 1234, imageUrl: "/img/test1.png" },
@@ -12,22 +11,11 @@ const Trending: React.FC = () => {
   return (
     <section className="py-8 mt-12">
       <h2 className="mb-8 text-2xl font-bold text-white sm:text-3xl">Trending Challenges</h2>
-      <motion.div 
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6 lg:gap-8"
-        initial="hidden"
-        animate="visible"
-        variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-      >
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6 lg:gap-8">
         {challenges.map((challenge) => (
-          <motion.div
+          <div
             key={challenge.id}
             className="overflow-hidden transition-all duration-300 transform bg-slate-800 rounded-xl hover:shadow-lg hover:-translate-y-1"
-            variants={{
-              hidden: { y: 20, opacity: 0 },
-              visible: { y: 0, opacity: 1 }
-            }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
           >
             <div className="relative pb-[75%] sm:pb-[100%] overflow-hidden group">
               <img
@@ -36,13 +24,11 @@ const Trending: React.FC = () => {
                 className="absolute top-0 left-0 object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 flex items-center justify-center transition-all duration-300 bg-black bg-opacity-0 group-hover:bg-opacity-50">
-                <motion.button
+                <button
                   className="px-4 py-2 text-sm font-semibold text-white transition-opacity duration-300 bg-purple-600 rounded-full opacity-0 sm:px-6 sm:text-base group-hover:opacity-100"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                 >
                   Play Now
-                </motion.button>
+                </button>
               </div>
             </div>
             <div className="p-4">
@@ -58,9 +44,9 @@ const Trending: React.FC = () => {
                 <span className="text-xs text-gray-300">{challenge.participants} participants</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 };
