@@ -5,13 +5,12 @@ import "firebase/compat/storage";
 
 //  Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyB8hKqAm-LTjhoe7PE2pNdMOPXCJf8oz8E",
-  authDomain: "craftcss-9b162.firebaseapp.com",
-  projectId: "craftcss-9b162",
-  storageBucket: "craftcss-9b162.appspot.com",
-  messagingSenderId: "132929525077",
-  appId: "1:132929525077:web:6a5c15ddba5a2f16768bdc",
-  measurementId: "G-5CLLYCJNQP",
+  apiKey: "AIzaSyD4AXBUtSc6Bt4jjg_-hHYVf_rZEHi58Ag",
+  authDomain: "minor-proj-e6b9e.firebaseapp.com",
+  projectId: "minor-proj-e6b9e",
+  storageBucket: "minor-proj-e6b9e.appspot.com",
+  messagingSenderId: "91349592506",
+  appId: "1:91349592506:web:275dc4a98259657c6c1583",
 };
 
 /**

@@ -1,35 +1,38 @@
 import dedent from "dedent";
-import html2canvas from "html2canvas";
 import { useRef, useState } from "react";
-import pixelmatch from "pixelmatch";
-import { PNG } from "pngjs";
 import CodeEditor from "../../editor";
 import OutputScreen from "./output";
 import TargetScreen from "./target";
 import TopBar from "./top-bar";
-
-// Helper function to load the target image and return a canvas
-const loadImage = (src: string): Promise<HTMLCanvasElement> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.src = src;
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(img, 0, 0);
-        resolve(canvas);
-      } else {
-        reject("Could not get canvas context");
-      }
-    };
-    img.onerror = (err) => reject(err);
-  });
-};
+import { useGetTargetByIdQuery } from "../../api";
+import { useParams } from "react-router";
+import {
+  compareImages,
+  getScreenshotFromIframe,
+  loadImage,
+} from "../../utils/image";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "../../store";
+import { storeMatchData } from "../../slice/matchSlice";
+import { useGetMatchDataQuery } from "../../api/match";
 
 const PlayGround = () => {
+  const { targetId } = useParams();
+
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { data: target } = useGetTargetByIdQuery(targetId ?? "");
+  const dispatch = useAppDispatch();
+
+  const { data } = useGetMatchDataQuery(
+    { userId: user?.uid ?? "", targetId: target?.id ?? "" },
+    { skip: !user?.uid || !target?.id }, // Skip if no userId or targetId is provided
+  );
+
+  const [similarityPercentange, setSimilarityPercentange] = useState<number>(
+    data?.percentageMatched ?? 0,
+  );
+  const [score, setScore] = useState<number>(data?.maxScore ?? 0);
+
   const [code, setCode] = useState(
     dedent`<div></div>
     <style>
@@ -44,66 +47,39 @@ const PlayGround = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null); // Ref for iframe
 
   const compareImg = async () => {
-    const iframe = iframeRef.current;
+    const screenshotBase64 = await getScreenshotFromIframe(iframeRef.current);
 
-    if (!iframe) return; // Ensure iframe exists
-
-    // Capture the content of the iframe
-    const iframeDocument = iframe.contentWindow?.document.body;
-    if (!iframeDocument) return;
-
-    const canvasGenerated = await html2canvas(iframeDocument);
-    const generatedImageData = canvasGenerated
-      .getContext("2d")
-      ?.getImageData(0, 0, canvasGenerated.width, canvasGenerated.height);
-
-    if (!generatedImageData) return; // Ensure image data is captured
-
-    // Load the target image
-    const targetCanvas = await loadImage("/sample.png");
-    const targetImageData = targetCanvas
-      .getContext("2d")
-      ?.getImageData(0, 0, targetCanvas.width, targetCanvas.height);
-
-    if (!targetImageData) return; // Ensure target image is loaded
-
-    // Prepare a canvas for the diff image
-    const diffCanvas = document.createElement("canvas");
-    diffCanvas.width = targetCanvas.width;
-    diffCanvas.height = targetCanvas.height;
-    const diffContext = diffCanvas.getContext("2d");
-    const diffImageData = diffContext?.createImageData(
-      targetCanvas.width,
-      targetCanvas.height,
-    );
-
-    // Compare images using pixelmatch
-    const numDiffPixels = pixelmatch(
-      targetImageData.data, // Target image data
-      generatedImageData.data, // Generated image data
-      diffImageData?.data || new Uint8ClampedArray(), // Diff data to be filled
-      targetCanvas.width,
-      targetCanvas.height,
-      { threshold: 0.1 },
-    );
-
-    console.log(`Number of different pixels: ${numDiffPixels}`);
-    const totalPixels = targetCanvas.width * targetCanvas.height;
-    const numMatchedPixels = totalPixels - numDiffPixels;
-    const percentageMatch = (numMatchedPixels / totalPixels) * 100;
-
-    console.log(`Percentage of matched pixels: ${percentageMatch.toFixed(2)}%`);
-    if (diffContext && diffImageData) {
-      diffContext.putImageData(diffImageData, 0, 0);
-      document.body.appendChild(diffCanvas);
+    if (!screenshotBase64) {
+      console.error("Failed to capture iframe screenshot.");
+      return;
     }
+
+    const targetCanvas = await loadImage(target?.image ?? "");
+    const targetBase64 = targetCanvas.toDataURL("image/png");
+
+    const getPercentage = await compareImages(screenshotBase64, targetBase64);
+    const calculatedSimilarity = Number((100 - getPercentage).toFixed(2));
+
+    // Update state with the new similarity percentage and score
+    setSimilarityPercentange(calculatedSimilarity);
+
+    // Calculate score based on the new similarity
+    const calculatedScore = Number((calculatedSimilarity * 5).toFixed(2));
+    setScore(calculatedScore);
+    dispatch(
+      storeMatchData({
+        userId: user?.uid ?? "",
+        targetId: (target?.id as string) ?? "",
+        score,
+        percentageMatched: similarityPercentange,
+      }),
+    );
   };
 
   return (
-    <div className="bg-slate-950 w-full min-h-screen text-white font-['Jetbrains Mono']">
+    <div className="bg-slate-950 w-full min-h-screen text-white font-['Jetbrains Mono'] overflow-hidden">
       <TopBar onSubmit={compareImg} />
       <div className="grid grid-cols-3">
-        {/* Code Editor Section */}
         <div className="border-2 border-white ">
           <h1 className="bg-slate-900 py-1 px-2 font-bold uppercase">
             Code Editor
@@ -113,14 +89,19 @@ const PlayGround = () => {
 
         {/* Output Section */}
         <div className="border-2 border-white font-bold">
-          <OutputScreen ref={iframeRef} code={code} />
+          <OutputScreen
+            percentangeMatched={`${similarityPercentange}`}
+            score={`${score}`}
+            ref={iframeRef}
+            code={code}
+          />
         </div>
 
         {/* Target Image Section */}
         <div className="border-2 border-white font-bold">
           <TargetScreen
-            imageUrl="/sample.png"
-            colors={["#434B92", "#F3AC3C"]}
+            imageUrl={target?.image ?? ""}
+            colors={target?.colors ?? []}
           />
         </div>
       </div>
