@@ -1,4 +1,4 @@
-// src/store/matchSlice.ts
+// src/slice/matchSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { db } from "../firebase";
 import {
@@ -34,14 +34,14 @@ export const storeMatchData = createAsyncThunk<
   "match/storeMatchData",
   async (
     { userId, targetId, score, percentageMatched },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       // Query Firestore to check if a document with the same userId and targetId exists
       const q = query(
         collection(db, "matches"),
         where("userId", "==", userId),
-        where("targetId", "==", targetId),
+        where("targetId", "==", targetId)
       );
       const querySnapshot = await getDocs(q);
 
@@ -79,10 +79,14 @@ export const storeMatchData = createAsyncThunk<
           maxScore: score,
         };
       }
-    } catch (error: any) {
-      return rejectWithValue(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      } else {
+        return rejectWithValue("An unknown error occurred");
+      }
     }
-  },
+  }
 );
 
 // Initial state with type
@@ -108,14 +112,14 @@ export const matchSlice = createSlice({
         (state, action: PayloadAction<MatchData>) => {
           state.loading = false;
           state.data = action.payload; // Store the returned data
-        },
+        }
       )
       .addCase(
         storeMatchData.rejected,
         (state, action: PayloadAction<string | undefined>) => {
           state.loading = false;
           state.error = action.payload || "Something went wrong";
-        },
+        }
       );
   },
 });

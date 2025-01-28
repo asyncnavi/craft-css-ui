@@ -14,8 +14,8 @@ export const targetApi = createApi({
           const targetCollectionRef = collection(db, "target");
           const querySnapshot = await getDocs(targetCollectionRef);
           const targets = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
             ...(doc.data() as Target),
+            id: doc.id,  // Ensure id is added after spreading data
           }));
 
           return { data: targets };
@@ -34,8 +34,8 @@ export const targetApi = createApi({
 
           if (targetDoc.exists()) {
             const target = {
-              id: targetDoc.id,
               ...(targetDoc.data() as Target),
+              id: targetDoc.id,  // Ensure id is added after spreading data
             };
             return { data: target };
           } else {

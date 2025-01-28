@@ -1,5 +1,4 @@
 import NavigationRails from "../../component/navigation-rail";
-import { Link } from "react-router-dom";
 
 const Home = () => {
   return (

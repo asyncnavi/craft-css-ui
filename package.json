@@ -16,6 +16,7 @@
     "@tabler/icons-react": "^3.15.0",
     "@uiw/codemirror-theme-dracula": "^4.23.5",
     "@uiw/react-codemirror": "^4.23.5",
+    "canvas": "^3.1.0",
     "clsx": "^2.1.1",
     "dedent": "^1.5.3",
     "firebase": "^10.13.1",
@@ -29,7 +30,7 @@
     "react-hook-form": "^7.53.0",
     "react-redux": "^9.1.2",
     "react-router": "^6.26.1",
-    "react-router-dom": "^6.26.1",
+    "react-router-dom": "^6.28.2",
     "react-simple-code-editor": "^0.14.1",
     "resemblejs": "^5.0.0"
   },

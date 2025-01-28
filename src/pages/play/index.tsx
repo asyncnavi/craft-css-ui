@@ -1,5 +1,5 @@
 import dedent from "dedent";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CodeEditor from "../../editor";
 import OutputScreen from "./output";
 import TargetScreen from "./target";
@@ -17,6 +17,8 @@ import { storeMatchData } from "../../slice/matchSlice";
 import { useGetMatchDataQuery } from "../../api/match";
 
 const PlayGround = () => {
+
+  
   const { targetId } = useParams();
 
   const { user } = useSelector((state: RootState) => state.auth);
@@ -32,6 +34,9 @@ const PlayGround = () => {
     data?.percentageMatched ?? 0,
   );
   const [score, setScore] = useState<number>(data?.maxScore ?? 0);
+
+  useEffect( () => {console.log(score)} , [score]); 
+
 
   const [code, setCode] = useState(
     dedent`<div></div>
@@ -63,6 +68,7 @@ const PlayGround = () => {
     // Update state with the new similarity percentage and score
     setSimilarityPercentange(calculatedSimilarity);
 
+    
     // Calculate score based on the new similarity
     const calculatedScore = Number((calculatedSimilarity * 5).toFixed(2));
     setScore(calculatedScore);

@@ -45,8 +45,8 @@ export const compareImages = (
     resemble(image1)
       .compareTo(image2)
       .onComplete((data) => {
-        if (data) {
-          resolve(parseFloat(data.misMatchPercentage)); // Resolve the mismatch percentage as a number
+        if (data && typeof data.misMatchPercentage === "number") {
+          resolve(data.misMatchPercentage); // Directly resolve the mismatch percentage
         } else {
           reject(new Error("Error in comparison"));
         }
