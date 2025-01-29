@@ -21,6 +21,7 @@
     "dedent": "^1.5.3",
     "firebase": "^10.13.1",
     "html2canvas": "^1.4.1",
+    "lucide-react": "^0.474.0",
     "nope-validator": "^1.0.4",
     "pixelmatch": "^1.1.1",
     "pngjs": "^7.0.0",
