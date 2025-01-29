@@ -1,4 +1,4 @@
-import { IconFlame, IconPercentage } from "@tabler/icons-react";
+// import  from "@tabler/icons-react";
 import { forwardRef } from "react";
 
 type OutputScreenProps = {
